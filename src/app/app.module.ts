@@ -3,7 +3,9 @@ import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import EnvironmentConfig from '../config/environment-config';
-import { ProvidersModule } from 'src/providers/providers.module';
+import { ApiModule } from 'src/modules/api.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { typeOrmOptions } from 'src/config/typeorm';
 
 @Module({
   imports: [
@@ -11,7 +13,8 @@ import { ProvidersModule } from 'src/providers/providers.module';
       envFilePath: ['.env'],
       load: [EnvironmentConfig]
     }),
-    ProvidersModule
+    TypeOrmModule.forRoot(typeOrmOptions),
+    ApiModule
   ],
   controllers: [AppController],
   providers: [AppService],
