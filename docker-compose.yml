@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  dibbbre-api:
+    container_name: dibbbre-api
+    build: '.'
+    command: yarn start:dev
+    volumes:
+      - .:/home/node/dibbbre-api
+      - /home/node/dibbbre-api/node_modules
+    depends_on:
+      - dibbbre-postgres
+    networks:
+      - app-connect
+    ports:
+      - '5000:3000'
+
+  dibbbre-postgres:
+    container_name: dibbbre-postgres
+    image: postgres:11
+    restart: unless-stopped
+    volumes:
+      - dibbbre-postgres-data:/data
+    environment: 
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS} 
+    networks:
+      - app-connect
+
+volumes:
+  dibbbre-postgres-data:
+
+networks:
+  app-connect:
+      driver: bridge

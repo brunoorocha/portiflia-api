@@ -3,15 +3,15 @@ import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import EnvironmentConfig from '../config/environment-config';
-import { ProvidersModule } from 'src/providers/providers.module';
+// import { ProvidersModule } from 'src/providers/providers.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: ['.development.env', '.production.env'],
+      envFilePath: ['.env'],
       load: [EnvironmentConfig]
     }),
-    ProvidersModule
+    // ProvidersModule
   ],
   controllers: [AppController],
   providers: [AppService],
