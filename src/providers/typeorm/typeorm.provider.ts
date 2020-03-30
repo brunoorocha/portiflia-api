@@ -7,16 +7,30 @@ export class TypeormProvider implements TypeOrmOptionsFactory {
   constructor (private configService: ConfigService) {}
 
 	async createTypeOrmOptions(): Promise<TypeOrmModuleOptions> {
-    const mongodbHost = this.configService.get<string>('database.host');
+		const dbHost = this.configService.get<string>('database.host');
+		const dbName = this.configService.get<string>('database.name');
+		const dbUser = this.configService.get<string>('database.user');
+		const dbPass = this.configService.get<string>('database.pass');
+		const dbPort = parseInt(this.configService.get<string>('database.port'));
 
 		return {
-			type: 'mongodb',
-      url: mongodbHost,
-      entities: ['../../models/entities/*.entity.ts'],
-      migrations: ['../../models/migrations/*.migration.ts'],
+			type: 'postgres',
+			host: dbHost,
+			username: dbUser,
+			password: dbPass,
+			database: dbName,
+			port: dbPort,
+
+      entities: ['src/models/entities/*.entity.ts'],
       migrationsTableName: 'migrations',
+			migrations: ['src/models/migrations/*.migration.ts'],
+
+			cli: {
+				entitiesDir: 'src/models/entities',
+				migrationsDir: 'src/models/migrations'
+			},
+
 			synchronize: true,
-			useNewUrlParser: true
 		}
 	}
 }
