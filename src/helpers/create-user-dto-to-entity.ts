@@ -6,7 +6,6 @@ export const CreateUserDTOToUserEntity = (createUserDTO: CreateUserDTO): User =>
   userEntity.name = createUserDTO.name;
   userEntity.email = createUserDTO.email;
   userEntity.username = createUserDTO.username;
-  userEntity.password = createUserDTO.password;
 
   return userEntity;
 }
