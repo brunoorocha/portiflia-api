@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import * as dotenv from 'dotenv';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '../../models/entities/user.entity';
-import * as dotenv from 'dotenv';
+import { JwtStrategy } from './strategies/jwt.strategy';
 
 dotenv.config();
 
@@ -16,7 +17,7 @@ dotenv.config();
       signOptions: { expiresIn: '7 days' }
     })
   ],
-  providers: [AuthService],
+  providers: [AuthService, JwtStrategy],
   controllers: [AuthController]
 })
 export class AuthModule {}
