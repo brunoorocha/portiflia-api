@@ -1,4 +1,5 @@
-import { IsString, IsEmail } from 'class-validator';
+import { IsString, IsEmail, Validate } from 'class-validator';
+import { IsUsernameAlreadyInUse } from 'src/modules/user/validators/isUsernameAlreadyInUse';
 
 export class CreateUserDTO {
   @IsString()
@@ -9,6 +10,7 @@ export class CreateUserDTO {
   readonly email: string;
 
   @IsString()
+  @Validate(IsUsernameAlreadyInUse)
   readonly username: string;
 
   @IsString()
