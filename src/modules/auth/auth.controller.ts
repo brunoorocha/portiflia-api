@@ -9,7 +9,7 @@ export class AuthController {
   @Post()
   @UsePipes(ValidationPipe)
   async authenticate (@Res() res, @Body() credentials: UserAuthenticationDTO) {
-    const user = await this.service.authenticate(credentials);
-    return res.status(HttpStatus.OK).json({ token: 'Bearer <user_token>', user });
+    const token = await this.service.authenticate(credentials);
+    return res.status(HttpStatus.OK).json({ 'access_token': token });
   }
 }

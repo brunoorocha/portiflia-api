@@ -1,6 +1,10 @@
 
 export default () => ({
-  port: parseInt(process.env.port, 10) || 5000,
+  app: {
+    port: parseInt(process.env.APP_PORT, 10) || 5000,
+    secretKey: process.env.APP_SECRET_KEY
+  },
+
   database: {
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
