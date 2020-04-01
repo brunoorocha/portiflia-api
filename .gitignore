@@ -35,3 +35,6 @@ lerna-debug.log*
 
 # Uploads Directory
 /uploads
+
+# Environment Files
+.env
