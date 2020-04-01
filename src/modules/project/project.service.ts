@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Project } from 'src/models/entities/project.entity';
 import { Repository } from 'typeorm';
@@ -15,5 +15,20 @@ export class ProjectService {
     projectEntity.user = owner;
     const storedProject = await this.repository.save(projectEntity);
     return storedProject;
+  }
+
+  async findProjectById (projectId: number): Promise<Project> {
+    const project = await this.repository.findOne(projectId);
+    if (!project) {
+      throw new NotFoundException({ message: `There's no project with id ${projectId}` });
+    }
+
+    return project;
+  }
+
+  async deleteProject (projectId: number): Promise<Project> {
+    const project = await this.findProjectById(projectId);
+    await this.repository.delete({ id: projectId });
+    return project;
   }
 }
