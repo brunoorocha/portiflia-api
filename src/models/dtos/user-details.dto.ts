@@ -1,10 +1,12 @@
 import { User } from "../entities/user.entity";
+import { Project } from "../entities/project.entity";
 
 export class UserDetailsDTO {
   constructor (
     readonly name: string,
     readonly username: string,
-    readonly email: string
+    readonly email: string,
+    readonly projects?: Project[]
   ) {}
 
   static fromUserEntity (userEntity: User) {
