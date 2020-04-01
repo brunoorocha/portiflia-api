@@ -19,7 +19,8 @@ export class ProjectController {
   @UseInterceptors(FileInterceptor('image'))
   async createProject (@Res() res, @Request() req, @Body() createProjectDTO: CreateProjectDTO, @UploadedFile() image) {
     const user = await this.userService.findUserById(req.user.userId);
-    createProjectDTO.imageUrl = getImageUrl(req, image.filename);
+    createProjectDTO.imageUrl = image.secure_url;
+
     const project = await this.projectService.createProject(user, createProjectDTO);
     const formattedProjectOutput = ProjectDetailsDTO.fromProjectEntity(project);
     return res.status(HttpStatus.OK).json(formattedProjectOutput);

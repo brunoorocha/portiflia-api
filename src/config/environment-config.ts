@@ -3,7 +3,10 @@ export default () => ({
   app: {
     port: parseInt(process.env.APP_PORT, 10) || 5000,
     secretKey: process.env.APP_SECRET_KEY,
-    filesDirectory: process.env.APP_FILES_DIRECTORY
+  },
+
+  cloudinary: {
+    folder: process.env.CLOUDINARY_FOLDER
   },
 
   database: {
