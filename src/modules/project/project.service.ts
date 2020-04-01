@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Project } from 'src/models/entities/project.entity';
 import { Repository } from 'typeorm';
@@ -17,8 +17,8 @@ export class ProjectService {
     return storedProject;
   }
 
-  async findProjectById (projectId: number): Promise<Project> {
-    const project = await this.repository.findOne(projectId);
+  async findProjectById (projectId: number, relations: string[] = []): Promise<Project> {
+    const project = await this.repository.findOne(projectId, { relations });
     if (!project) {
       throw new NotFoundException({ message: `There's no project with id ${projectId}` });
     }
@@ -26,9 +26,17 @@ export class ProjectService {
     return project;
   }
 
-  async deleteProject (projectId: number): Promise<Project> {
-    const project = await this.findProjectById(projectId);
+  async deleteProject (projectId: number, user: User): Promise<Project> {
+    const project = await this.findProjectById(projectId, ['user']);
+    if (!this.projectBelongsToUser(project, user)) {
+      throw new UnauthorizedException({ message: `You can\'t delete this project because it doesn\'t belongs to user ${user.username}.` });
+    }
+
     await this.repository.delete({ id: projectId });
     return project;
+  }
+
+  private projectBelongsToUser (project: Project, user: User): boolean {
+    return project.user.id === user.id;
   }
 }
