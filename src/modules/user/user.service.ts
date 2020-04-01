@@ -4,30 +4,35 @@ import { Repository } from 'typeorm';
 import { User } from 'src/models/entities/user.entity';
 import { CreateUserDTO } from 'src/models/dtos/create-user.dto';
 import { CreateUserDTOToUserEntity } from 'src/helpers/create-user-dto-to-entity'
-import { UserDetailsDTO } from 'src/models/dtos/user-details.dto';
 import * as PasswordHelper from 'src/helpers/password-encrypt';
+import { Project } from 'src/models/entities/project.entity';
 
 @Injectable()
 export class UserService {
   constructor (@InjectRepository(User) private readonly repository: Repository<User>) {}
 
-  async createUser (createUserDTO: CreateUserDTO): Promise<UserDetailsDTO> {
+  async createUser (createUserDTO: CreateUserDTO): Promise<User> {
     const userEntity = CreateUserDTOToUserEntity(createUserDTO);
     const encryptedPassword = PasswordHelper.encryptPassword(createUserDTO.password);
     userEntity.passwordHash = encryptedPassword.hash;
     userEntity.passwordSalt = encryptedPassword.salt;
 
     const storedUser = await this.repository.save(userEntity);
-    return UserDetailsDTO.fromUserEntity(storedUser);
+    return storedUser;
   }
 
-  async findUserById (id: number): Promise<User> {
-    const user = await this.repository.findOne(id);
+  async findUserById (id: number, relations: string[] = []): Promise<User> {
+    const user = await this.repository.findOne(id, { relations });
     if (!user) {
       throw new NotFoundException({ message: `There's no user with id ${id}.` });
     }
 
     return user;
+  }
+
+  async getProjectsForUserWithId (userId: number): Promise<Project[]> {
+    const user = await this.findUserById(userId, ['projects']);
+    return user.projects;
   }
 
   async isUsernameAlreadyInUse (username: string): Promise<boolean> {

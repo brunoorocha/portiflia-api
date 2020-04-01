@@ -1,6 +1,8 @@
-import { Controller, Post, Res, Body, HttpStatus, ValidationPipe, UsePipes } from '@nestjs/common';
+import { Controller, Post, Res, Body, HttpStatus, ValidationPipe, UsePipes, Get, Req, Param, ParseIntPipe } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDTO } from 'src/models/dtos/create-user.dto';
+import { UserDetailsDTO } from 'src/models/dtos/user-details.dto';
+import { ProjectDetailsDTO } from 'src/models/dtos/project-details.dto';
 
 @Controller('users')
 export class UserController {
@@ -9,7 +11,15 @@ export class UserController {
   @Post()
   @UsePipes(ValidationPipe)
   async createUser (@Res() res, @Body() createUserDTO: CreateUserDTO) {
-    const newUser = await this.service.createUser(createUserDTO);
-    return res.status(HttpStatus.OK).json(newUser);
+    const user = await this.service.createUser(createUserDTO);
+    const formattedUserOutput = UserDetailsDTO.fromUserEntity(user);
+    return res.status(HttpStatus.OK).json(formattedUserOutput);
+  }
+
+  @Get(':userId/projects')
+  async getProjects (@Res() res, @Param('userId', ParseIntPipe) userId: number) {
+    const projects = await this.service.getProjectsForUserWithId(userId);
+    const formattedProjectsOutput = projects.map(project => ProjectDetailsDTO.fromProjectEntity(project));
+    return res.status(HttpStatus.OK).json(formattedProjectsOutput);
   }
 }
