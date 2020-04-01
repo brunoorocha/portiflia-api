@@ -5,12 +5,14 @@ import { CreateProjectDTO } from 'src/models/dtos/create-project.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { UserService } from '../user/user.service';
 import { ProjectDetailsDTO } from 'src/models/dtos/project-details.dto';
+import { LikeService } from './like.service';
 
 @Controller('projects')
 export class ProjectController {
   constructor (
     private readonly projectService: ProjectService,
-    private readonly userService: UserService
+    private readonly userService: UserService,
+    private readonly likeService: LikeService
   ) {}
 
   @Post()
@@ -34,10 +36,26 @@ export class ProjectController {
 
   @Delete(':projectId')
   @UseGuards(JwtAuthGuard)
-  async deleteProject (@Res() res, @Request() req, @Param('projectId', ParseIntPipe) projectId: number) {
+  async deleteProject (
+    @Res() res,
+    @Request() req,
+    @Param('projectId', ParseIntPipe) projectId: number
+  ) {
     const user = await this.userService.findUserById(req.user.userId);
     const deletedProject = await this.projectService.deleteProject(projectId, user);
     const formattedProjectOutput = ProjectDetailsDTO.fromProjectEntity(deletedProject);
     return res.status(HttpStatus.OK).json(formattedProjectOutput);
+  }
+
+  @Post(':projectId/likes')
+  @UseGuards(JwtAuthGuard)
+  async likeProject (
+    @Res() res,
+    @Request() req,
+    @Param('projectId', ParseIntPipe) projectId: number
+  ) {
+    const { userId } = req.user;
+    await this.likeService.like(userId, projectId);
+    return res.status(HttpStatus.OK).json({});
   }
 }

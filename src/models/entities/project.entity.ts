@@ -1,6 +1,7 @@
 import { BaseEntity } from './base.entity';
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { User } from './user.entity';
+import { Like } from './like.entity';
 
 @Entity({ name: 'projects' })
 export class Project extends BaseEntity {
@@ -16,4 +17,8 @@ export class Project extends BaseEntity {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   @ManyToOne(type => User, user => user.projects)
   user: User;
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  @OneToMany(type => Like, like => like.project)
+  likes: Like[];
 }
