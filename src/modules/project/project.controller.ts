@@ -3,7 +3,6 @@ import { ProjectService } from './project.service';
 import { CreateProjectDTO } from 'src/models/dtos/create-project.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { UserService } from '../user/user.service';
-import { CreateProjectDTOToProjectEntity } from 'src/helpers/create-project-dto-to-project-entity';
 import { ProjectDetailsDTO } from 'src/models/dtos/project-details.dto';
 
 @Controller('projects')
