@@ -11,6 +11,7 @@ import { IsEmailAlreadyInUse } from 'src/modules/user/validators/isEmailAlreadyI
     TypeOrmModule.forFeature([User])
   ],
   providers: [IsUsernameAlreadyInUse, IsEmailAlreadyInUse, UserService],
-  controllers: [UserController]
+  controllers: [UserController],
+  exports: [UserService]
 })
 export class UserModule {}

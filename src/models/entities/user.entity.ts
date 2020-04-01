@@ -1,7 +1,8 @@
-import { Entity, Column } from 'typeorm';
+import { Entity, Column, OneToMany } from 'typeorm';
 import { BaseEntity } from './base.entity';
+import { Project } from './project.entity';
 
-@Entity({ name: 'user' })
+@Entity({ name: 'users' })
 export class User extends BaseEntity {
   @Column({ type: 'varchar', length: 48, nullable: false })
   name: string;
@@ -17,4 +18,8 @@ export class User extends BaseEntity {
   
   @Column({ type: 'varchar', length: 32, nullable: false })
   passwordSalt: string;
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  @OneToMany(type => Project, project => project.user)
+  projects: Project[];
 }

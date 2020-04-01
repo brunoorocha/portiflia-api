@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from 'src/models/entities/user.entity';
@@ -17,8 +17,17 @@ export class UserService {
     userEntity.passwordHash = encryptedPassword.hash;
     userEntity.passwordSalt = encryptedPassword.salt;
 
-    const newUser = await this.repository.save(userEntity);
-    return UserDetailsDTO.fromUserEntity(newUser);
+    const storedUser = await this.repository.save(userEntity);
+    return UserDetailsDTO.fromUserEntity(storedUser);
+  }
+
+  async findUserById (id: number): Promise<User> {
+    const user = await this.repository.findOne(id);
+    if (!user) {
+      throw new NotFoundException({ message: `There's no user with id ${id}.` });
+    }
+
+    return user;
   }
 
   async isUsernameAlreadyInUse (username: string): Promise<boolean> {
