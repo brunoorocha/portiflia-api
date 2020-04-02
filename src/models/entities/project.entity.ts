@@ -1,5 +1,5 @@
 import { BaseEntity } from './base.entity';
-import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, JoinTable, RelationCount } from 'typeorm';
 import { User } from './user.entity';
 import { Like } from './like.entity';
 
@@ -21,4 +21,7 @@ export class Project extends BaseEntity {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   @OneToMany(type => Like, like => like.project)
   likes: Like[];
+
+  @RelationCount((project: Project) => project.likes)
+  likesCount: number;
 }
