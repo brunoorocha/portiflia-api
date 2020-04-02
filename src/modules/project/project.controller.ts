@@ -58,4 +58,16 @@ export class ProjectController {
     await this.likeService.like(userId, projectId);
     return res.status(HttpStatus.OK).json({});
   }
+
+  @Delete(':projectId/likes')
+  @UseGuards(JwtAuthGuard)
+  async unlikeProject (
+    @Res() res,
+    @Request() req,
+    @Param('projectId', ParseIntPipe) projectId: number
+  ) {
+    const { userId } = req.user;
+    await this.likeService.unlike(userId, projectId);
+    return res.status(HttpStatus.OK).json({});
+  }
 }

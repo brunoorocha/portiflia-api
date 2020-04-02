@@ -15,17 +15,27 @@ export class LikeService {
 
   async like (userId: number, projectId: number): Promise<Like> {
     const user = await this.userService.findUserById(userId);
-    if (!user) {
-      throw new NotFoundException({ message: `No user found with id ${userId}` });
-    }
-
     const project = await this.projectService.findProjectById(projectId);
-    if (!project) {
-      throw new NotFoundException({ message: `No user found with id ${userId}` });
+    const like = await this.repository.findOne({ user, project });
+
+    if(!like) {
+      const likeEntity = this.repository.create({ user, project });
+      return await this.repository.save(likeEntity);
     }
 
-    const likeEntity = this.repository.create({ user, project });
-    const like = await this.repository.save(likeEntity);
+    return like;
+  }
+
+  async unlike (userId: number, projectId: number): Promise<Like> {
+    const user = await this.userService.findUserById(userId);
+    const project = await this.projectService.findProjectById(projectId);
+    const like = await this.repository.findOne({ user, project });
+
+    if (!like) {
+      throw new NotFoundException({ message: `The user ${user.username} didn't liked the project with id ${project.id}` });
+    }
+
+    await this.repository.delete({ user, project });
     return like;
   }
 }
