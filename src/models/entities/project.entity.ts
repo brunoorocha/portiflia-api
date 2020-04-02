@@ -1,5 +1,5 @@
 import { BaseEntity } from './base.entity';
-import { Column, Entity, ManyToOne, OneToMany, JoinTable, RelationCount } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, RelationCount } from 'typeorm';
 import { User } from './user.entity';
 import { Like } from './like.entity';
 

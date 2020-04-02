@@ -6,13 +6,15 @@ import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { UserService } from '../user/user.service';
 import { ProjectDetailsDTO } from 'src/models/dtos/project-details.dto';
 import { LikeService } from './like.service';
+import { WsGateway } from 'src/app/gateways/ws/ws.gateway';
 
 @Controller('projects')
 export class ProjectController {
   constructor (
     private readonly projectService: ProjectService,
     private readonly userService: UserService,
-    private readonly likeService: LikeService
+    private readonly likeService: LikeService,
+    private readonly wsGateway: WsGateway
   ) {}
 
   @Post()
@@ -55,7 +57,8 @@ export class ProjectController {
     @Param('projectId', ParseIntPipe) projectId: number
   ) {
     const { userId } = req.user;
-    await this.likeService.like(userId, projectId);
+    const like = await this.likeService.like(userId, projectId);
+    this.wsGateway.ws.emit(`notifications:user:${userId}`, { message: `${like.user.username} liked your project.` });
     return res.status(HttpStatus.OK).json({});
   }
 

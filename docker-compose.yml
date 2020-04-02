@@ -14,6 +14,7 @@ services:
       - app-connect
     ports:
       - '5000:3000'
+      - '5001:3001'
 
   dibbbre-postgres:
     container_name: dibbbre-postgres
