@@ -16,6 +16,13 @@ export class UserController {
     return res.status(HttpStatus.OK).json(formattedUserOutput);
   }
 
+  @Get(':userId')
+  async getProfile (@Res() res, @Param('userId', ParseIntPipe) userId: number) {
+    const user = await this.service.findUserById(userId);
+    const formattedUserOutput = UserDetailsDTO.fromUserEntity(user);
+    return res.status(HttpStatus.OK).json(formattedUserOutput);
+  }
+
   @Get(':userId/projects')
   async getProjects (@Res() res, @Param('userId', ParseIntPipe) userId: number) {
     const projects = await this.service.getProjectsForUserWithId(userId);
