@@ -1,4 +1,5 @@
 import { Project } from "../entities/project.entity";
+import { User } from "../entities/user.entity";
 
 export class ProjectDetailsDTO {
   constructor (
@@ -7,11 +8,11 @@ export class ProjectDetailsDTO {
     readonly imageUrl: string,
     readonly likesCount: number,
     readonly description?: string,
-    readonly userId?: number
+    readonly user?: User
   ) {}
 
   static fromProjectEntity (projectEntity: Project) {
     const { id, title, description, imageUrl, user, likesCount } = projectEntity;
-    return new ProjectDetailsDTO(id, title, imageUrl, likesCount, description, user?.id);
+    return new ProjectDetailsDTO(id, title, imageUrl, likesCount, description, user);
   }
 }

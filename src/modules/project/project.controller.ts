@@ -29,6 +29,13 @@ export class ProjectController {
     return res.status(HttpStatus.OK).json(formattedProjectOutput);
   }
 
+  @Get()
+  async fetchAllProjects (@Res() res) {
+    const projects = await this.projectService.fetchAllProjects();
+    const formattedProjectsOutput = projects.map(project => ProjectDetailsDTO.fromProjectEntity(project));
+    return res.status(HttpStatus.OK).json(formattedProjectsOutput);
+  }
+
   @Get(':projectId')
   async getProject (@Res() res, @Param('projectId', ParseIntPipe) projectId: number) {
     const project = await this.projectService.findProjectById(projectId);
