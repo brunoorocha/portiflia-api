@@ -7,6 +7,8 @@ import { UserService } from '../user/user.service';
 import { ProjectDetailsDTO } from 'src/models/dtos/project-details.dto';
 import { LikeService } from './like.service';
 import { WsGateway } from 'src/app/gateways/ws/ws.gateway';
+import { User } from 'src/helpers/decorators/user.decorator';
+import { User as UserEntity } from 'src/models/entities/user.entity';
 
 @Controller('projects')
 export class ProjectController {
@@ -50,7 +52,7 @@ export class ProjectController {
     @Request() req,
     @Param('projectId', ParseIntPipe) projectId: number
   ) {
-    const user = await this.userService.findUserById(req.user.userId);
+    const { user } = req
     const deletedProject = await this.projectService.deleteProject(projectId, user);
     const formattedProjectOutput = ProjectDetailsDTO.fromProjectEntity(deletedProject);
     return res.status(HttpStatus.OK).json(formattedProjectOutput);
@@ -61,11 +63,11 @@ export class ProjectController {
   async likeProject (
     @Res() res,
     @Request() req,
+    @User() user: UserEntity,
     @Param('projectId', ParseIntPipe) projectId: number
   ) {
-    const { userId } = req.user;
-    const like = await this.likeService.like(userId, projectId);
-    this.wsGateway.ws.emit(`notifications:user:${userId}`, { message: `${like.user.username} liked your project.` });
+    const like = await this.likeService.like(user.id, projectId);
+    this.wsGateway.ws.emit(`notifications:user:${user.id}`, { message: `${like.user.username} liked your project.` });
     return res.status(HttpStatus.OK).json({});
   }
 
@@ -74,10 +76,10 @@ export class ProjectController {
   async unlikeProject (
     @Res() res,
     @Request() req,
+    @User() user: UserEntity,
     @Param('projectId', ParseIntPipe) projectId: number
   ) {
-    const { userId } = req.user;
-    await this.likeService.unlike(userId, projectId);
+    await this.likeService.unlike(user.id, projectId);
     return res.status(HttpStatus.OK).json({});
   }
 }
