@@ -3,6 +3,7 @@ import { Project } from "../entities/project.entity";
 
 export class UserDetailsDTO {
   constructor (
+    readonly id: number,
     readonly name: string,
     readonly username: string,
     readonly email: string,
@@ -10,7 +11,7 @@ export class UserDetailsDTO {
   ) {}
 
   static fromUserEntity (userEntity: User) {
-    const { name, username, email } = userEntity;
-    return new UserDetailsDTO(name, username, email);
+    const { id, name, username, email } = userEntity;
+    return new UserDetailsDTO(id, name, username, email);
   }
 }
