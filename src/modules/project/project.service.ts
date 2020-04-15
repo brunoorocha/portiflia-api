@@ -18,7 +18,7 @@ export class ProjectService {
   }
 
   async fetchAllProjects (): Promise<Project[]> {
-    const projects = await this.repository.find({ relations: ['user'] });
+    const projects = await this.repository.find({ relations: ['user', 'likes'] });
     return projects;
   }
 

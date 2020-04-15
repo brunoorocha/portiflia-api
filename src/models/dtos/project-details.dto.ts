@@ -2,6 +2,8 @@ import { Project } from "../entities/project.entity";
 import { UserDetailsDTO } from "./user-details.dto";
 
 export class ProjectDetailsDTO {
+  isLiked?: boolean 
+
   constructor (
     readonly id: number,
     readonly title: string,

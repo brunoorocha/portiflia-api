@@ -6,6 +6,7 @@ import { CreateUserDTO } from 'src/models/dtos/create-user.dto';
 import { CreateUserDTOToUserEntity } from 'src/helpers/create-user-dto-to-entity'
 import * as PasswordHelper from 'src/helpers/password-encrypt';
 import { Project } from 'src/models/entities/project.entity';
+import { Like } from 'src/models/entities/like.entity';
 
 @Injectable()
 export class UserService {
@@ -33,6 +34,11 @@ export class UserService {
   async getProjectsForUserWithId (userId: number): Promise<Project[]> {
     const user = await this.findUserById(userId, ['projects']);
     return user.projects;
+  }
+
+  async getLikedProjectsForUserWithId (userId: number): Promise<Like[]> {
+    const user = await this.findUserById(userId, ['liked']);
+    return user.liked;
   }
 
   async isUsernameAlreadyInUse (username: string): Promise<boolean> {

@@ -9,6 +9,7 @@ import { LikeService } from './like.service';
 import { WsGateway } from 'src/app/gateways/ws/ws.gateway';
 import { User } from 'src/helpers/decorators/user.decorator';
 import { User as UserEntity } from 'src/models/entities/user.entity';
+import { JwtOptionalAuthGuard } from '../auth/guards/jwt-optional.guard';
 
 @Controller('projects')
 export class ProjectController {
@@ -32,9 +33,23 @@ export class ProjectController {
   }
 
   @Get()
-  async fetchAllProjects (@Res() res) {
+  @UseGuards(JwtOptionalAuthGuard)
+  async fetchAllProjects (@Res() res, @User() user?: UserEntity) {
     const projects = await this.projectService.fetchAllProjects();
+    const projectsLikesSet = projects.map(project => new Set(project.likes.map(like => like.id)))
     const formattedProjectsOutput = projects.map(project => ProjectDetailsDTO.fromProjectEntity(project));
+
+    if (user) {
+      const userLikeds = await this.userService.getLikedProjectsForUserWithId(user.id)
+      userLikeds.forEach(like => {
+        projectsLikesSet.forEach ((projectLikes, index) => {
+          if (projectLikes.has(like.id)) {
+            formattedProjectsOutput[index].isLiked = true
+          }
+        })
+      })
+    }
+
     return res.status(HttpStatus.OK).json(formattedProjectsOutput);
   }
 
