@@ -23,10 +23,14 @@ export class ProjectController {
   @Post()
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('image'))
-  async createProject (@Res() res, @Request() req, @Body() createProjectDTO: CreateProjectDTO, @UploadedFile() image) {
-    const user = await this.userService.findUserById(req.user.userId);
+  async createProject (
+    @Res() res,
+    @Request() req,
+    @Body() createProjectDTO: CreateProjectDTO,
+    @UploadedFile() image,
+    @User() user: UserEntity,
+  ) {
     createProjectDTO.imageUrl = image.secure_url;
-
     const project = await this.projectService.createProject(user, createProjectDTO);
     const formattedProjectOutput = ProjectDetailsDTO.fromProjectEntity(project);
     return res.status(HttpStatus.OK).json(formattedProjectOutput);
@@ -82,7 +86,12 @@ export class ProjectController {
     @Param('projectId', ParseIntPipe) projectId: number
   ) {
     const like = await this.likeService.like(user.id, projectId);
-    this.wsGateway.ws.emit(`notifications:user:${user.id}`, { message: `${like.user.username} liked your project.` });
+    const projectOwner = like.project.user
+
+    if (projectOwner.id !== user.id) {
+      this.wsGateway.ws.emit(`notifications:user:${projectOwner.id}`, { message: `${user.username} liked your project.` });
+    }
+
     return res.status(HttpStatus.OK).json({});
   }
 

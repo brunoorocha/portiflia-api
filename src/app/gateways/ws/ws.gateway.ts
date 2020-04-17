@@ -11,6 +11,6 @@ export class WsGateway implements OnGatewayConnection {
   ws: Socket;
 
   handleConnection(@ConnectedSocket() client: Socket) {
-    client.emit('handcheck', { message: 'Dibbbre websocket server handcheck' });
+    client.emit('handshake', { message: 'Dibbbre websocket server handshake' });
   }
 }
