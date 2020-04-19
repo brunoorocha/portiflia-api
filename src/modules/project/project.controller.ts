@@ -59,7 +59,7 @@ export class ProjectController {
 
   @Get(':projectId')
   async getProject (@Res() res, @Param('projectId', ParseIntPipe) projectId: number) {
-    const project = await this.projectService.findProjectById(projectId);
+    const project = await this.projectService.findProjectById(projectId, ['user']);
     const formattedProjectOutput = ProjectDetailsDTO.fromProjectEntity(project);
     return res.status(HttpStatus.OK).json(formattedProjectOutput);
   }

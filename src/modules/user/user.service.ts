@@ -31,6 +31,15 @@ export class UserService {
     return user;
   }
 
+  async findUserByUsername (username: string): Promise<User> {
+    const user = await this.repository.findOne({ where: { username }, relations: ['liked', 'projects'] });
+    if (!user) {
+      throw new NotFoundException({ message: `There's no user with username ${username}.` });
+    }
+
+    return user;
+  }
+
   async getProjectsForUserWithId (userId: number): Promise<Project[]> {
     const user = await this.findUserById(userId, ['projects']);
     return user.projects;
@@ -39,6 +48,13 @@ export class UserService {
   async getLikedProjectsForUserWithId (userId: number): Promise<Like[]> {
     const user = await this.findUserById(userId, ['liked']);
     return user.liked;
+  }
+
+  async setPhotoUrlForUserWithId (userId: number, photoUrl: string): Promise<User> {
+    const user = await this.findUserById(userId);
+    user.photoUrl = photoUrl;
+    const updatedUser = await this.repository.save(user);
+    return updatedUser;
   }
 
   async isUsernameAlreadyInUse (username: string): Promise<boolean> {
