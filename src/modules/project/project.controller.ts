@@ -44,7 +44,7 @@ export class ProjectController {
     const formattedProjectsOutput = projects.map(project => ProjectDetailsDTO.fromProjectEntity(project));
 
     if (user) {
-      const userLikeds = await this.userService.getLikedProjectsForUserWithId(user.id)
+      const userLikeds = await this.userService.getLikedProjectsForUser(user.id)
       userLikeds.forEach(like => {
         projectsLikesSet.forEach ((projectLikes, index) => {
           if (projectLikes.has(like.id)) {

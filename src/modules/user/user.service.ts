@@ -22,7 +22,8 @@ export class UserService {
     return storedUser;
   }
 
-  async findUser (userIdOrUsername: string): Promise<User> {
+  async findUser (userIdOrUsername: number | string): Promise<User> {
+    userIdOrUsername = `${userIdOrUsername}`;
     const userId = parseInt(userIdOrUsername);
     const user = !isNaN(userId) ? 
       await this.findUserById(userId) :
@@ -49,7 +50,8 @@ export class UserService {
     return user;
   }
 
-  async getProjectsForUser (userIdOrUsername: string): Promise<Project[]> {
+  async getProjectsForUser (userIdOrUsername: number | string): Promise<Project[]> {
+    userIdOrUsername = `${userIdOrUsername}`;
     const userId = parseInt(userIdOrUsername);
     const user = !isNaN(userId) ? 
       await this.findUserById(userId, ['projects']) :
@@ -58,8 +60,25 @@ export class UserService {
     return user.projects;
   }
 
-  async getLikedProjectsForUserWithId (userId: number): Promise<Like[]> {
-    const user = await this.findUserById(userId, ['liked']);
+  async getLikedProjectsForUser (userIdOrUsername: number | string): Promise<Like[]> {
+    userIdOrUsername = `${userIdOrUsername}`;
+    const userId = parseInt(userIdOrUsername);
+    const joinQuery = {
+      alias: 'user',
+      leftJoinAndSelect: {
+        'liked': 'user.liked',
+        'project': 'liked.project',
+        'projectOwner': 'project.user'
+      }
+    }
+
+    const user = !isNaN(userId) ? 
+      await this.repository.findOne(userId, { join: joinQuery }) :
+      await this.repository.findOne({
+        where: { username: userIdOrUsername },
+        join: joinQuery
+      });
+
     return user.liked;
   }
 

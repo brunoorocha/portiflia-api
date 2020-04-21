@@ -34,6 +34,17 @@ export class UserController {
     return res.status(HttpStatus.OK).json(formattedProjectsOutput);
   }
 
+  @Get(':userIdOrUsername/liked-projects')
+  async getLikedProjects (@Res() res, @Param('userIdOrUsername') userIdOrUsername: string) {
+    const likes = await this.service.getLikedProjectsForUser(userIdOrUsername);
+    const projects = likes.map(like => like.project);
+
+    const formattedProjectsOutput = projects
+                                      .map(project => ProjectDetailsDTO.fromProjectEntity(project))
+                                      .map(project => ({ ...project, isLiked: true }));
+    return res.status(HttpStatus.OK).json(formattedProjectsOutput);
+  }
+
   @Put(':userId/profile-image')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('profileImage'))
