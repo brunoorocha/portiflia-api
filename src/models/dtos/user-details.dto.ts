@@ -1,5 +1,4 @@
-import { User } from "../entities/user.entity";
-import { Project } from "../entities/project.entity";
+import { User } from '../entities/user.entity';
 
 export class UserDetailsDTO {
   constructor (
@@ -7,11 +6,13 @@ export class UserDetailsDTO {
     readonly name: string,
     readonly username: string,
     readonly email: string,
-    readonly projects?: Project[]
+    readonly profileImage?: string,
+    readonly likedCount?: number,
+    readonly projectsCount?: number
   ) {}
 
   static fromUserEntity (userEntity: User) {
-    const { id, name, username, email } = userEntity;
-    return new UserDetailsDTO(id, name, username, email);
+    const { id, name, username, email, photoUrl, likedCount, projectsCount } = userEntity;
+    return new UserDetailsDTO(id, name, username, email, photoUrl, likedCount, projectsCount);
   }
 }

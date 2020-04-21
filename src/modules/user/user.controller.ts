@@ -1,4 +1,4 @@
-import { Controller, Post, Res, Body, HttpStatus, ValidationPipe, UsePipes, Get, Param, ParseIntPipe, Put, UseGuards, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Post, Res, Body, HttpStatus, ValidationPipe, UsePipes, Get, Param, Put, UseGuards, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDTO } from 'src/models/dtos/create-user.dto';
 import { UserDetailsDTO } from 'src/models/dtos/user-details.dto';
@@ -22,21 +22,14 @@ export class UserController {
 
   @Get(':userIdOrUsername')
   async getProfile (@Res() res, @Param('userIdOrUsername') userIdOrUsername: string) {
-    const userId = parseInt(userIdOrUsername)
-    if (!isNaN(userId)) {
-      const user = await this.service.findUserById(userId);
-      const formattedUserOutput = UserDetailsDTO.fromUserEntity(user);
-      return res.status(HttpStatus.OK).json(formattedUserOutput);
-    }
-
-    const user = await this.service.findUserByUsername(userIdOrUsername);
+    const user = await this.service.findUser(userIdOrUsername);
     const formattedUserOutput = UserDetailsDTO.fromUserEntity(user);
     return res.status(HttpStatus.OK).json(formattedUserOutput);
   }
 
-  @Get(':userId/projects')
-  async getProjects (@Res() res, @Param('userId', ParseIntPipe) userId: number) {
-    const projects = await this.service.getProjectsForUserWithId(userId);
+  @Get(':userIdOrUsername/projects')
+  async getProjects (@Res() res, @Param('userIdOrUsername') userIdOrUsername: string) {
+    const projects = await this.service.getProjectsForUser(userIdOrUsername);
     const formattedProjectsOutput = projects.map(project => ProjectDetailsDTO.fromProjectEntity(project));
     return res.status(HttpStatus.OK).json(formattedProjectsOutput);
   }

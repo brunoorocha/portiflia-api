@@ -22,6 +22,15 @@ export class UserService {
     return storedUser;
   }
 
+  async findUser (userIdOrUsername: string): Promise<User> {
+    const userId = parseInt(userIdOrUsername);
+    const user = !isNaN(userId) ? 
+      await this.findUserById(userId) :
+      await this.findUserByUsername(userIdOrUsername);
+
+    return user;
+  }
+
   async findUserById (id: number, relations: string[] = []): Promise<User> {
     const user = await this.repository.findOne(id, { relations });
     if (!user) {
@@ -31,8 +40,8 @@ export class UserService {
     return user;
   }
 
-  async findUserByUsername (username: string): Promise<User> {
-    const user = await this.repository.findOne({ where: { username }, relations: ['liked', 'projects'] });
+  async findUserByUsername (username: string, relations: string[] = []): Promise<User> {
+    const user = await this.repository.findOne({ where: { username }, relations });
     if (!user) {
       throw new NotFoundException({ message: `There's no user with username ${username}.` });
     }
@@ -40,8 +49,12 @@ export class UserService {
     return user;
   }
 
-  async getProjectsForUserWithId (userId: number): Promise<Project[]> {
-    const user = await this.findUserById(userId, ['projects']);
+  async getProjectsForUser (userIdOrUsername: string): Promise<Project[]> {
+    const userId = parseInt(userIdOrUsername);
+    const user = !isNaN(userId) ? 
+      await this.findUserById(userId, ['projects']) :
+      await this.findUserByUsername(userIdOrUsername, ['projects']);
+
     return user.projects;
   }
 

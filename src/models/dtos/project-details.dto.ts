@@ -15,7 +15,7 @@ export class ProjectDetailsDTO {
 
   static fromProjectEntity (projectEntity: Project) {
     const { id, title, description, imageUrl, user, likesCount } = projectEntity;
-    const userDetails = UserDetailsDTO.fromUserEntity(user);
+    const userDetails = user ? UserDetailsDTO.fromUserEntity(user) : undefined;
     return new ProjectDetailsDTO(id, title, imageUrl, likesCount, description, userDetails);
   }
 }
