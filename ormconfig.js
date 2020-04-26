@@ -1,11 +1,19 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const dotenv = require('dotenv');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const EnvironmentConfig = require('../portifolia-api/src/config/environment-config');
+
+dotenv.config();
+
+const envConfig = EnvironmentConfig();
 
 module.exports = {
   type: 'postgres',
-  host: 'localhost',
-  username: 'portifolia',
-  password: 'portifoliadbpass',
-  database: 'portifolia',
-  port: 5432,
+  host: envConfig.database.host,
+  username: envConfig.database.user,
+  password: envConfig.database.pass,
+  database: envConfig.database.name,
+  port: envConfig.database.port,
 
   entities: ['src/models/entities/*.entity.ts'],
   migrationsTableName: 'migrations',

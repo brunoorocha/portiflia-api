@@ -1,12 +1,18 @@
 import { TypeOrmModuleOptions } from "@nestjs/typeorm";
+import * as dotenv from 'dotenv';
+import EnvironmentConfig from './environment-config';
+
+dotenv.config();
+
+const envConfig = EnvironmentConfig();
 
 export const typeOrmOptions: TypeOrmModuleOptions = {
   type: 'postgres',
-  host: 'portifolia-postgres',
-  username: 'portifolia',
-  password: 'portifoliadbpass',
-  database: 'portifolia',
-  port: 5432,
+  host: envConfig.database.host,
+  username: envConfig.database.user,
+  password: envConfig.database.pass,
+  database: envConfig.database.name,
+  port: envConfig.database.port,
 
   entities: ['dist/models/entities/*.entity.js'],
   migrationsTableName: 'migrations',
