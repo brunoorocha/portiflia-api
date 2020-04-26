@@ -1,7 +1,7 @@
 
 export default () => ({
   app: {
-    port: parseInt(process.env.APP_PORT, 10) || 5000,
+    port: parseInt(process.env.PORT, 10) || 5000,
     wspPort: parseInt(process.env.APP_WS_PORT, 10) || 5001,
     secretKey: process.env.APP_SECRET_KEY,
   },
