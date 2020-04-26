@@ -9,6 +9,7 @@ async function bootstrap() {
   const port = configService.get('app.port') || 3000;
   
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
+  console.log(`Start to listen on port ${port}`)
   await app.listen(port);
 }
 bootstrap();
