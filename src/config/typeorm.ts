@@ -2,10 +2,10 @@ import { TypeOrmModuleOptions } from "@nestjs/typeorm";
 
 export const typeOrmOptions: TypeOrmModuleOptions = {
   type: 'postgres',
-  host: 'dibbbre-postgres',
-  username: 'dibbbre',
-  password: 'dibbbredbpass',
-  database: 'dibbbre',
+  host: 'portifolia-postgres',
+  username: 'portifolia',
+  password: 'portifoliadbpass',
+  database: 'portifolia',
   port: 5432,
 
   entities: ['dist/models/entities/*.entity.js'],

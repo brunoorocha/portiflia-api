@@ -1,27 +1,27 @@
 version: '3'
 
 services:
-  dibbbre-api:
-    container_name: dibbbre-api
+  portifolia-api:
+    container_name: portifolia-api
     build: '.'
     command: yarn start:dev
     volumes:
-      - .:/home/node/dibbbre-api
-      - /home/node/dibbbre-api/node_modules
+      - .:/home/node/portifolia-api
+      - /home/node/portifolia-api/node_modules
     depends_on:
-      - dibbbre-postgres
+      - portifolia-postgres
     networks:
       - app-connect
     ports:
       - '5000:3000'
       - '5001:3001'
 
-  dibbbre-postgres:
-    container_name: dibbbre-postgres
+  portifolia-postgres:
+    container_name: portifolia-postgres
     image: postgres:11
     restart: unless-stopped
     volumes:
-      - dibbbre-postgres-data:/data
+      - portifolia-postgres-data:/data
     environment: 
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
@@ -32,7 +32,7 @@ services:
       - app-connect
 
 volumes:
-  dibbbre-postgres-data:
+  portifolia-postgres-data:
 
 networks:
   app-connect:

@@ -2,9 +2,9 @@
 module.exports = {
   type: 'postgres',
   host: 'localhost',
-  username: 'dibbbre',
-  password: 'dibbbredbpass',
-  database: 'dibbbre',
+  username: 'portifolia',
+  password: 'portifoliadbpass',
+  database: 'portifolia',
   port: 5432,
 
   entities: ['src/models/entities/*.entity.ts'],

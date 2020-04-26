@@ -1,8 +1,8 @@
 FROM node:lts-alpine
 
-RUN mkdir -p /home/node/dibbbre-api/node_modules && chown -R node:node /home
+RUN mkdir -p /home/node/portifolia-api/node_modules && chown -R node:node /home
 
-WORKDIR /home/node/dibbbre-api
+WORKDIR /home/node/portifolia-api
 
 COPY package.json yarn.* ./
 
