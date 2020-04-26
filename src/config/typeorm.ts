@@ -24,4 +24,5 @@ export const typeOrmOptions: TypeOrmModuleOptions = {
   },
 
   synchronize: true,
+  ssl: envConfig.database.ssl == 'true'
 }
