@@ -6,6 +6,9 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { User } from '../../models/entities/user.entity';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { FacebookStrategy } from './strategies/facebook.strategy';
+import { ConfigModule } from '@nestjs/config';
+import { UserService } from '../user/user.service';
 
 dotenv.config();
 
@@ -15,9 +18,10 @@ dotenv.config();
     JwtModule.register({
       secret: process.env.APP_SECRET_KEY,
       signOptions: { expiresIn: '7 days' }
-    })
+    }),
+    ConfigModule,
   ],
-  providers: [AuthService, JwtStrategy],
+  providers: [AuthService, JwtStrategy, FacebookStrategy, UserService],
   controllers: [AuthController]
 })
 export class AuthModule {}

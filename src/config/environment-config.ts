@@ -17,5 +17,11 @@ export default () => ({
     pass: process.env.DB_PASS,
     name: process.env.DB_NAME,
     ssl: process.env.DB_SSL
+  },
+
+  facebook: {
+    appID: process.env.FACEBOOK_APP_ID,
+    appSecret: process.env.FACEBOOK_APP_SECRET,
+    callbackURL: process.env.FACEBOOK_CALLBACK_URL
   }
 });
