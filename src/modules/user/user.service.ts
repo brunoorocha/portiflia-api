@@ -3,22 +3,36 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from 'src/models/entities/user.entity';
 import { CreateUserDTO } from 'src/models/dtos/create-user.dto';
-import { CreateUserDTOToUserEntity } from 'src/helpers/create-user-dto-to-entity'
+import { CreateUserEntity } from 'src/helpers/create-user-dto-to-entity'
 import * as PasswordHelper from 'src/helpers/password-encrypt';
 import { Project } from 'src/models/entities/project.entity';
 import { Like } from 'src/models/entities/like.entity';
+import { FacebookSigInDTO } from 'src/models/dtos/facebook-sigin-payload.dto';
 
 @Injectable()
 export class UserService {
   constructor (@InjectRepository(User) private readonly repository: Repository<User>) {}
 
   async createUser (createUserDTO: CreateUserDTO): Promise<User> {
-    const userEntity = CreateUserDTOToUserEntity(createUserDTO);
+    const userEntity = CreateUserEntity(createUserDTO);
     const encryptedPassword = PasswordHelper.encryptPassword(createUserDTO.password);
     userEntity.passwordHash = encryptedPassword.hash;
     userEntity.passwordSalt = encryptedPassword.salt;
 
     const storedUser = await this.repository.save(userEntity);
+    return storedUser;
+  }
+
+  async signInOrCreateUserFromFacebook (facebookSignInDTO: FacebookSigInDTO): Promise<User> {
+    const { facebookId } = facebookSignInDTO;
+    const user = await this.repository.findOne({ where: { facebookId }});
+
+    if (user) {
+      return user;
+    }
+
+    const newUser = CreateUserEntity(facebookSignInDTO);
+    const storedUser = await this.repository.save(newUser);
     return storedUser;
   }
 

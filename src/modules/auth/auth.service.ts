@@ -24,7 +24,12 @@ export class AuthService {
       throw new BadRequestException({ message: `Your password its wrong.` });
     }
 
-    const payload = { username: userForUsername.username, sub: userForUsername.id };
+    const token = this.getTokenForUser(userForUsername);
+    return token;
+  }
+
+  getTokenForUser (user: User) {
+    const payload = { username: user.username, sub: user.id };
     const token = this.jwtService.sign(payload);
     return token;
   }

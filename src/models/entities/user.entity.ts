@@ -14,11 +14,14 @@ export class User extends BaseEntity {
   @Column({ type: 'varchar', length: 64, unique: true, nullable: false })
   email: string;
 
-  @Column({ type: 'varchar', length: 1024, nullable: false })
-  passwordHash: string;
+  @Column({ type: 'varchar', length: 1024, nullable: true })
+  passwordHash?: string;
   
-  @Column({ type: 'varchar', length: 32, nullable: false })
-  passwordSalt: string;
+  @Column({ type: 'varchar', length: 32, nullable: true })
+  passwordSalt?: string;
+
+  @Column({ type: 'varchar', length: 48, unique: true, nullable: true })
+  facebookId?: string;
 
   @Column({ type: 'varchar', length: 1024, nullable: true })
   photoUrl?: string;
