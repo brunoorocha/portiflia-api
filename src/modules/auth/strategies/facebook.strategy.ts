@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { use } from 'passport';
 import { UserService } from 'src/modules/user/user.service';
-import { FacebookSigInDTO } from 'src/models/dtos/facebook-sigin-payload.dto';
+import { OAuthSignInDTO } from 'src/models/dtos/facebook-sigin-payload.dto';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const FacebookTokenStrategy = require('passport-facebook-token');
@@ -31,9 +31,9 @@ export class FacebookStrategy {
         const { id, displayName, emails, photos } = profile;
         const email = emails[0].value;
         const photoUrl = photos[0].value;
-        const facebookSignInDTO = new FacebookSigInDTO(displayName, email, id, photoUrl);
+        const oAuthSignInDTO = new OAuthSignInDTO(displayName, email, photoUrl, id);
 
-        const user = await this.userService.signInOrCreateUserFromFacebook(facebookSignInDTO);
+        const user = await this.userService.signInOrCreateUserFromSocialOAuth(oAuthSignInDTO);
         return done(null, user);
       })
     )

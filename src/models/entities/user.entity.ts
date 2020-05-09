@@ -23,6 +23,9 @@ export class User extends BaseEntity {
   @Column({ type: 'varchar', length: 48, unique: true, nullable: true })
   facebookId?: string;
 
+  @Column({ type: 'varchar', length: 48, unique: true, nullable: true })
+  googleId?: string;
+
   @Column({ type: 'varchar', length: 1024, nullable: true })
   photoUrl?: string;
 

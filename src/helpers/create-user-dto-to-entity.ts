@@ -6,6 +6,7 @@ interface UserDataDTO {
   username: string
   photoUrl?: string
   facebookId?: string
+  googleId?: string
 }
 
 export const CreateUserEntity = (userData: UserDataDTO): User => {
@@ -15,6 +16,7 @@ export const CreateUserEntity = (userData: UserDataDTO): User => {
   userEntity.username = userData.username;
   userEntity.photoUrl = userData.photoUrl;
   userEntity.facebookId = userData.facebookId;
+  userEntity.googleId = userData.googleId;
 
   return userEntity;
 }

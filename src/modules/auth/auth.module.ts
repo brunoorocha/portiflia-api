@@ -9,6 +9,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { FacebookStrategy } from './strategies/facebook.strategy';
 import { ConfigModule } from '@nestjs/config';
 import { UserService } from '../user/user.service';
+import { GoogleStrategy } from './strategies/google.strategy';
 
 dotenv.config();
 
@@ -21,7 +22,7 @@ dotenv.config();
     }),
     ConfigModule,
   ],
-  providers: [AuthService, JwtStrategy, FacebookStrategy, UserService],
+  providers: [AuthService, JwtStrategy, FacebookStrategy, GoogleStrategy, UserService],
   controllers: [AuthController]
 })
 export class AuthModule {}

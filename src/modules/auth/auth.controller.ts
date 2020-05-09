@@ -22,4 +22,11 @@ export class AuthController {
     const token = this.service.getTokenForUser(user);
     return res.status(HttpStatus.OK).json({ accessToken: token });
   }
+
+  @UseGuards(AuthGuard('google-token'))
+  @Get('google')
+  async googleSignIn (@Req() req, @Res() res, @User() user: UserEntity) {
+    const token = this.service.getTokenForUser(user);
+    return res.status(HttpStatus.OK).json({ accessToken: token });
+  }
 }

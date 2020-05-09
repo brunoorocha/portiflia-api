@@ -7,7 +7,7 @@ import { CreateUserEntity } from 'src/helpers/create-user-dto-to-entity'
 import * as PasswordHelper from 'src/helpers/password-encrypt';
 import { Project } from 'src/models/entities/project.entity';
 import { Like } from 'src/models/entities/like.entity';
-import { FacebookSigInDTO } from 'src/models/dtos/facebook-sigin-payload.dto';
+import { OAuthSignInDTO } from 'src/models/dtos/facebook-sigin-payload.dto';
 
 @Injectable()
 export class UserService {
@@ -23,15 +23,15 @@ export class UserService {
     return storedUser;
   }
 
-  async signInOrCreateUserFromFacebook (facebookSignInDTO: FacebookSigInDTO): Promise<User> {
-    const { facebookId } = facebookSignInDTO;
-    const user = await this.repository.findOne({ where: { facebookId }});
+  async signInOrCreateUserFromSocialOAuth (oAuthSignInDTO: OAuthSignInDTO): Promise<User> {
+    const { facebookId, googleId } = oAuthSignInDTO;
+    const user = await this.repository.findOne({ where: [{ facebookId }, { googleId }]});
 
     if (user) {
       return user;
     }
 
-    const newUser = CreateUserEntity(facebookSignInDTO);
+    const newUser = CreateUserEntity(oAuthSignInDTO);
     const storedUser = await this.repository.save(newUser);
     return storedUser;
   }

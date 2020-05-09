@@ -1,10 +1,11 @@
 
-export class FacebookSigInDTO {
+export class OAuthSignInDTO {
   constructor (
     readonly name: string,
     readonly email: string,
-    readonly facebookId: string,
-    readonly photoUrl: string
+    readonly photoUrl: string,
+    readonly facebookId?: string,
+    readonly googleId?: string,
   ) {}
 
   get username () {
